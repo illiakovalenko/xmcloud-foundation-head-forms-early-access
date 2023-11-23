@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import * as BYOC from '@sitecore/byoc';
-import * as FEAAS from '@sitecore-feaas/clientside/react';
 import '@sitecore/components/context';
 
 interface IkiComponentProps {
@@ -8,12 +7,9 @@ interface IkiComponentProps {
   columnsCount: number;
 }
 
-export const IkiComponent = ({
-  getSDK,
-  title,
-}: IkiComponentProps & BYOC.ContextProperties): JSX.Element => {
+export const IkiComponent = (props: IkiComponentProps & BYOC.ContextProperties): JSX.Element => {
   useEffect(() => {
-    getSDK('Events').then((events) => {
+    props.getSDK('Events').then((events) => {
       events?.pageView({
         channel: 'WEB',
         currency: 'CAD',
@@ -21,18 +17,16 @@ export const IkiComponent = ({
         language: 'en',
       });
     });
-  }, [getSDK]);
-  return <h1>{title}</h1>;
+  }, [props.getSDK]);
+  return <h1>{props.title}</h1>;
 };
 
-FEAAS.External.registerComponent(IkiComponent, {
+BYOC.registerComponent(IkiComponent, {
   name: 'IkiComponent',
+  group: 'Test',
   properties: {
     title: {
       type: 'string',
-    },
-    columnsCount: {
-      type: 'number',
     },
   },
 });
